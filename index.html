@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+　　<meta charset="UTF-8">
+  <title>满屏飘字与像素爱心</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+    }
+
+    .text {
+      position: absolute;
+      color: white;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 100px;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="heart"></div>
+  <script>
+    // 文字数组，可自行添加或修改文字内容
+    const texts = ["平安喜乐", "照顾好自己", "劳逸结合", "一切顺利", "保持乐观", "好好吃饭", "别太劳累", "按时吃饭", "注意保暖", "一切安好", "记得吃早餐", "记得喝水", "记得微笑", "保持活力", "万事如意", "注意身体", "笑口常开", "记得运动", "天天开心"];
+    const textElements = [];
+    const speedRange = [1, 3]; // 文字飘动速度范围
+
+    function createText() {
+      const text = document.createElement('div');
+      text.className = 'text';
+      text.innerText = texts[Math.floor(Math.random() * texts.length)];
+      text.style.left = Math.random() * window.innerWidth + 'px';
+      text.style.top = Math.random() * window.innerHeight + 'px';
+      text.style.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+      text.style.fontSize = `${14 + Math.random() * 10}px`;
+      text.style.animation = `float ${(speedRange[1] - speedRange[0]) * Math.random() + speedRange[0]}s linear infinite`;
+      document.body.appendChild(text);
+      textElements.push(text);
+
+      // 一段时间后移除并重新创建，实现循环效果
+      setTimeout(() => {
+        document.body.removeChild(text);
+        const index = textElements.indexOf(text);
+        if (index > -1) {
+          textElements.splice(index, 1);
+        }
+        createText();
+      }, (speedRange[1] - speedRange[0]) * 1000 + speedRange[0] * 1000);
+    }
+
+    // 初始化创建多个文字元素
+    for (let i = 0; i < 30; i++) {
+      createText();
+    }
+
+    // 定义飘动动画
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-${window.innerHeight}px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
